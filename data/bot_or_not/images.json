@@ -1,0 +1,76 @@
+[
+  {
+    "id": "img1",
+    "filename": "img1.png",
+    "truth": "artist",
+    "explain_image": "img1_explain.png"
+  },
+  {
+    "id": "img2",
+    "filename": "img2.png",
+    "truth": "ai",
+    "explain_image": "img2_explain.png"
+  },
+  {  "id": "img3",
+    "filename": "img3.png",
+    "truth": "ai",
+    "explain_image": "img3_explain.png"
+},
+{   "id": "img4",
+    "filename": "img4.png",
+    "truth": "ai",
+    "explain_image": "img4_explain.png"
+},
+{   "id": "img5",
+    "filename": "img5.png",
+    "truth": "child",
+    "explain_image": "img5_explain.png"
+},
+{   "id": "img6",
+    "filename": "img6.png",
+    "truth": "ai",
+    "explain_image": "img6_explain.png"
+},
+{   "id": "img7",
+    "filename": "img7.png",
+    "truth": "ai",
+    "explain_image": "img7_explain.png"
+},
+{   "id": "img8",
+    "filename": "img8.png",
+    "truth": "child",
+    "explain_image": "img8_explain.png"
+},
+{   "id": "img9",
+    "filename": "img9.png",
+    "truth": "ai",
+    "explain_image": "img9_explain.png"
+},
+{   "id": "img10",
+    "filename": "img10.png",
+    "truth": "artist",
+    "explain_image": "img10_explain.png"
+},
+{   "id": "img11",
+    "filename": "img11.png",
+    "truth": "artist",
+    "explain_image": "img11_explain.png"
+},
+{   "id": "img12",
+    "filename": "img12.png",
+    "truth": "child",
+    "explain_image": "img12_explain.png"
+},
+{   "id": "img13",
+    "filename": "img13.png",
+    "truth": "child",
+    "explain_image": "img13_explain.png"
+},
+{   "id": "img14",
+    "filename": "img14.png",
+    "truth": "child",
+    "explain_image": "img14_explain.png"
+}
+]
+
+

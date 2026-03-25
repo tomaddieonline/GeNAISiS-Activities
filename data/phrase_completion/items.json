@@ -1,0 +1,87 @@
+[
+  {
+    "id": "pc1",
+    "prompt_image": "q1.png",
+    "truth": "child",
+    "explain_image": "q1_explain.png"
+  },
+  {
+    "id": "pc2",
+    "prompt_image": "q2.png",
+    "truth": "ai",
+    "explain_image": "q2_explain.png"
+  },
+  {
+    "id": "pc3",
+    "prompt_image": "q3.png",
+    "truth": "child",
+    "explain_image": "q3_explain.png"
+  },
+    {
+    "id": "pc4",
+    "prompt_image": "q4.png",
+    "truth": "teacher",
+    "explain_image": "q4_explain.png"
+  },
+  {
+    "id": "pc5",
+    "prompt_image": "q5.png",
+    "truth": "child",
+    "explain_image": "q5_explain.png"
+  },
+  {
+    "id": "pc6",
+    "prompt_image": "q6.png",
+    "truth": "teacher",
+    "explain_image": "q6_explain.png"
+  },
+    {
+    "id": "pc7",
+    "prompt_image": "q7.png",
+    "truth": "child",
+    "explain_image": "q7_explain.png"
+  },
+  {
+    "id": "pc8",
+    "prompt_image": "q8.png",
+    "truth": "child",
+    "explain_image": "q8_explain.png"
+  },
+    {
+    "id": "pc9",
+    "prompt_image": "q9.png",
+    "truth": "teacher",
+    "explain_image": "q9_explain.png"
+  },
+  {
+    "id": "pc10",
+    "prompt_image": "q10.png",
+    "truth": "ai",
+    "explain_image": "q10_explain.png"
+  },
+      {
+    "id": "pc11",
+    "prompt_image": "q11.png",
+    "truth": "child",
+    "explain_image": "q11_explain.png"
+  },
+   {
+    "id": "pc12",
+    "prompt_image": "q12.png",
+    "truth": "teacher",
+    "explain_image": "q12_explain.png"
+  },
+   {
+    "id": "pc13",
+    "prompt_image": "q13.png",
+    "truth": "child",
+    "explain_image": "q13_explain.png"
+  },
+   {
+    "id": "pc14",
+    "prompt_image": "q14.png",
+    "truth": "ai",
+    "explain_image": "q14_explain.png"
+  }
+]
+

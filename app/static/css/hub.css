@@ -1,0 +1,88 @@
+:root{
+  --bg:#0b1220;
+  --panel:#0f1a2c;
+  --stroke:rgba(255,255,255,.10);
+  --text:#e9f0ff;
+  --muted:rgba(233,240,255,.72);
+  --accent:#47b2ff;
+}
+
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background:
+    radial-gradient(1000px 600px at 20% -10%, rgba(71,178,255,.25), transparent 60%),
+    radial-gradient(900px 600px at 90% 0%, rgba(132,71,255,.18), transparent 55%),
+    var(--bg);
+  color:var(--text);
+}
+
+.top{
+  border-bottom:1px solid var(--stroke);
+  padding:18px 16px;
+}
+.brand{
+  max-width:980px;
+  margin:0 auto;
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.logo{
+  width:44px; height:44px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  object-fit:cover;
+}
+.title{ font-weight:800; font-size:18px; }
+.sub{ color:var(--muted); font-size:13px; margin-top:2px; }
+
+.wrap{
+  max-width:980px;
+  margin:0 auto;
+  padding:18px 16px 28px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:12px;
+}
+@media (min-width: 860px){
+  .grid{ grid-template-columns: repeat(3, 1fr); }
+}
+
+.card{
+  display:block;
+  text-decoration:none;
+  color:inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:16px;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+.card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(71,178,255,.35);
+  background: linear-gradient(180deg, rgba(71,178,255,.10), rgba(255,255,255,.02));
+}
+
+.card.disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  pointer-events:none;
+}
+
+.cardTitle{ font-weight:800; font-size:16px; }
+.cardSub{ margin-top:6px; color:var(--muted); font-size:13px; }
+.meta{ margin-top:10px; color: rgba(233,240,255,.60); font-size:12px; }
+
+.foot{
+  border-top:1px solid var(--stroke);
+  padding:14px 16px;
+  color:rgba(233,240,255,.55);
+  font-size:12px;
+}
+.foot span{ max-width:980px; margin:0 auto; display:block; }

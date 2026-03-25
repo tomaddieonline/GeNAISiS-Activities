@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image Sequence • Play</title>
+
+  <!-- Your existing game styling -->
+  <link rel="stylesheet" href="/static/css/image_sequence.css" />
+
+  <!-- Bootstrap header (same as home.html) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <style>
+    /* ✅ Match Phrase Completion background (same gradient + base bg) */
+    :root{
+      --bg:#0b1220;
+      --hubTopBg: rgba(11,18,32,.72);
+      --hubStroke: rgba(255,255,255,.14);
+      --brand: #47b2ff;
+      --brand2: rgba(132,71,255,.16);
+    }
+
+    body{
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 700px at 18% -12%, rgba(71,178,255,.26), transparent 62%),
+        radial-gradient(1100px 700px at 92% -6%, var(--brand2), transparent 58%),
+        radial-gradient(900px 500px at 50% 110%, rgba(65,209,127,.10), transparent 58%),
+        var(--bg);
+    }
+
+    /* Same header styling pattern as home.html */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--hubTopBg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand-dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(71,178,255,.55);
+      display:inline-block;
+      margin-right:.55rem;
+      transform: translateY(-1px);
+    }
+
+    .logo{
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+    }
+    @media (min-width: 768px){
+      .logo{ width: 52px; height: 52px; }
+    }
+
+    .text-muted-2{ color: rgba(233,240,255,.72) !important; }
+
+    /* Keep your page layout single-column (Notes removed) */
+    .wrap.grid{ grid-template-columns: 1fr !important; }
+
+    /* Better touch targets on tablets/phones */
+    @media (hover:none){
+      .btn{ min-height: 46px; }
+    }
+  </style>
+</head>
+
+<body class="text-light">
+
+  <!-- Header copied from home.html style -->
+  <header class="topbar border-bottom border-secondary border-opacity-25">
+    <div class="container py-3 py-md-4">
+      <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <div class="d-flex align-items-center gap-3">
+          <img
+            src="/static/assets/logo.png"
+            alt="Logo"
+            class="logo rounded-4 border border-secondary border-opacity-25"
+          />
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="brand-dot"></span>
+              <h1 class="h5 mb-0 fw-bold">Maddie GenAI Games</h1>
+            </div>
+            <div class="text-muted-2 small">Bias Busters, Hallucination Hunters!</div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <a href="/games/image-sequence" class="btn btn-outline-light btn-sm">← Info</a>
+          <a href="/" class="btn btn-outline-light btn-sm">Home</a>
+          <span class="badge rounded-pill text-bg-secondary" id="pillProgress">0 / 0</span>
+          <!-- <span class="badge rounded-pill text-bg-dark border border-secondary border-opacity-25" id="microSession">Session: —</span> -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Your existing page content -->
+  <main class="wrap grid">
+    <section class="card">
+      <div class="status" id="microStatus">Loading…</div>
+
+      <div class="stage">
+        <div id="skeleton" class="skeleton">
+          <div class="skBox"></div>
+          <div class="skLine"></div>
+        </div>
+
+        <figure id="frame" class="frame hidden">
+          <img id="img" alt="Sequence image" />
+          <figcaption id="caption"></figcaption>
+        </figure>
+      </div>
+
+      <div class="nav">
+        <button class="btn text-bg-dark" id="prevBtn">← Previous</button>
+        <button class="btn primary text-bg-dark" id="nextBtn">Next →</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast">…</div>
+
+  <!-- Bootstrap JS (optional; safe to include) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+
+  <script src="/static/js/image_sequence.js"></script>
+</body>
+</html>

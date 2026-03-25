@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bot or Not Game</title>
+
+  <link rel="stylesheet" href="/static/css/bot_or_not.css" />
+
+  <style>
+    /* ✅ Match home.html header + premium background */
+    :root{
+      --bg:#0b1220;
+      --panel: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --muted: rgba(233,240,255,.72);
+      --brand: #47b2ff;
+      --brand2: rgba(132,71,255,.16);
+
+      --hubTopBg: rgba(11,18,32,.72);
+      --hubStroke: rgba(255,255,255,.12);
+    }
+
+    body{
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(1200px 700px at 18% -12%, rgba(71,178,255,.26), transparent 62%),
+        radial-gradient(1100px 700px at 92% -6%, var(--brand2), transparent 58%),
+        radial-gradient(900px 500px at 50% 110%, rgba(65,209,127,.10), transparent 58%),
+        var(--bg);
+      color: #e9f0ff;
+    }
+
+    /* ✅ Header (home-like) */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--hubTopBg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--hubStroke);
+    }
+
+    .brand-dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(71,178,255,.55);
+      display:inline-block;
+      margin-right:.55rem;
+      transform: translateY(-1px);
+    }
+
+    .logo{
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Page wrap spacing (like the phrase page) */
+    .wrap{
+      max-width: 1180px; /* slightly wider to support bigger question panel */
+      margin: 0 auto;
+      padding: 14px 16px 24px;
+    }
+    @media (min-width: 768px){
+      .logo{ width: 52px; height: 52px; }
+      .wrap{ padding-top: 18px; }
+    }
+
+    .backlink{
+      white-space: nowrap;
+      opacity: .92;
+      text-decoration: none;
+      color: rgba(233,240,255,.92);
+    }
+    .backlink:hover{ text-decoration: underline; }
+
+    /* ✅ MAKE QUESTION CARD BIGGER THAN RESULT CARD (tablet/desktop) */
+    @media (min-width: 980px){
+      .grid{ grid-template-columns: 1.55fr .95fr; } /* left bigger */
+    }
+
+    @media (hover:none){
+      .btn{ min-height: 46px; }
+    }
+
+    /* ✅ BIGGER IMAGE AREA + IMAGE (same idea as phrase page) */
+    .stage{
+      min-height: 58vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #frame{ margin: 0; }
+
+    #img{
+      width: 100%;
+      height: auto;
+      max-height: 72vh;      /* bigger image */
+      object-fit: contain;   /* keep full image visible */
+      border-radius: 14px;
+    }
+
+    #caption{
+      font-size: 14px;
+      color: rgba(233,240,255,.75);
+      margin-top: 8px;
+    }
+
+    @media (min-width: 768px){
+      #img{ max-height: 76vh; }
+      #caption{ font-size: 15px; }
+    }
+
+    /* Reflection panel layout (uses your existing card styles) */
+    .reflectWrap{ max-width: 980px; margin: 0 auto; }
+    .reflectTitle{ font-weight: 800; font-size: 18px; margin-bottom: 6px; }
+    .reflectSub{ color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .reflectActions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+    .reflectImg{
+      width:100%;
+      height:auto;
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      background: #0b1020;
+      cursor: zoom-in;
+      box-shadow: 0 14px 32px rgba(0,0,0,.35);
+    }
+
+    /* Small spacing polish for the description box */
+    .explainDescWrap{ margin-top: 10px; }
+
+    /* Make title/sub look nice on smaller screens */
+    .gameTitle h1{ margin:0; line-height:1.1; }
+    .gameTitle h4{ margin:6px 0 0; font-weight:600; opacity:.9; }
+  </style>
+</head>
+
+<body>
+
+<!-- ✅ Header that matches the home-like structure -->
+<header class="topbar">
+  <div style="max-width:1180px;margin:0 auto;padding:14px 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:12px;min-width:260px;flex:1 1 auto;">
+        <img class="logo" src="/static/assets/logo.png" alt="Logo" />
+        <div class="gameTitle">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="brand-dot"></span>
+            <div style="font-weight:800;font-size:18px;">The Great Art Guess Off</div>
+          </div>
+          <div style="color:rgba(233,240,255,.72);font-size:13px;margin-top:2px;">
+            Bot Or Not • Guess whether it was produced by a Child, a Professional Artist, or an AI
+          </div>
+        </div>
+      </div>
+
+      <div class="pills" style="flex:0 0 auto;">
+        <div class="pill" id="pillProgress"><h2 style="margin:0;">0 / 0</h2></div>
+        <div class="pill" id="pillScore"><h2 style="margin:0;">Score: —</h2></div>
+      </div>
+
+      <a href="/" class="backlink" style="flex:0 0 auto;">Home</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- GAME GRID -->
+  <section class="grid" id="gameGrid">
+
+    <!-- LEFT (bigger on desktop) -->
+    <div class="card">
+      <div class="cardHead">
+        <div>
+          <div class="qTitle"><h1>Who created this image?</h1></div>
+          <div class="qSub">Keys: 1/2/3 • → skip • Enter next</div>
+        </div>
+        <!-- <div class="session" id="microSession">Session: —</div> -->
+      </div>
+
+      <div class="bar">
+        <div class="barFill" id="progressFill" style="width:0%"></div>
+      </div>
+
+      <div class="status" id="microStatus">Loading…</div>
+
+      <div class="stage">
+        <div id="skeleton" class="skeleton">
+          <div class="skBox"></div>
+          <div class="skLine"></div>
+        </div>
+
+        <figure id="frame" class="frame hidden">
+          <img id="img" alt="Guess the creator" />
+          <figcaption id="caption"></figcaption>
+        </figure>
+      </div>
+
+      <div class="actions">
+        <button class="btn" data-choice="child"><span class="k">1</span>Child</button>
+        <button class="btn" data-choice="artist"><span class="k">2</span>Professional Artist</button>
+        <button class="btn" data-choice="ai"><span class="k">3</span>AI</button>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" id="skipBtn"><span class="k">→</span>Skip</button>
+        <button class="btn primary" id="nextBtn" disabled><span class="k">⏎</span>Next</button>
+      </div>
+
+      <div id="endcard" class="endcard hidden">
+        <div class="endTitle">Done ✅</div>
+        <div id="endStats" class="endStats"></div>
+
+        <div class="actions" style="grid-template-columns: 1fr; margin-top: 10px;">
+          <button class="btn primary" id="reflectBtn">Go to Reflection →</button>
+          <button class="btn secondary" id="restartBtn">Play again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <aside class="card side">
+      <div class="sideHead">
+        <div class="sideTitle">Answer & Notes</div>
+        <div class="sideSub" id="sideSub">Make a choice to reveal the correct answer.</div>
+      </div>
+
+      <div class="badges">
+        <span class="badge" id="badgeResult">—</span>
+        <span class="badge" id="badgeTruth">Correct: —</span>
+      </div>
+
+      <div class="field">
+        <div class="label">Your choice</div>
+        <div class="box" id="yourChoice">—</div>
+      </div>
+
+      <div class="field">
+        <div class="label">Explanation image</div>
+        <img id="explainImg" class="explainImg hidden" alt="Explanation" />
+        <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
+
+        <!-- ✅ Description below explainImg -->
+        <div class="explainDescWrap">
+          <div class="label">Description</div>
+          <div class="box" id="explainDesc">—</div>
+        </div>
+      </div>
+    </aside>
+
+  </section>
+
+  <!-- REFLECTION VIEW (hidden until end) -->
+  <section id="reflectionView" class="hidden">
+    <div class="reflectWrap">
+      <div class="card">
+        <div class="reflectTitle" id="reflectTitle">Reflection</div>
+        <div class="reflectSub" id="reflectSub">Tap the image to zoom full-screen. Use Next to continue.</div>
+
+        <img id="reflectImg" class="reflectImg" alt="Reflection" />
+
+        <div class="reflectActions">
+          <button class="btn secondary" id="reflectBackBtn">← Back to results</button>
+          <button class="btn primary" id="reflectNextBtn">Next →</button>
+          <a class="btn secondary" href="/" id="reflectHomeBtn">Home</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast">…</div>
+
+<script src="/static/js/bot_or_not.js"></script>
+</body>
+</html>

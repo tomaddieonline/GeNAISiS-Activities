@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phrase Completion • Play</title>
+
+  <link rel="stylesheet" href="/static/css/phrase_completion.css" />
+
+  <!-- ✅ Match home.html header + background (no functionality changes) -->
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --muted: rgba(233,240,255,.72);
+      --brand: #47b2ff;
+      --brand2: rgba(132,71,255,.16);
+    }
+
+    body{
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(1200px 700px at 18% -12%, rgba(71,178,255,.26), transparent 62%),
+        radial-gradient(1100px 700px at 92% -6%, var(--brand2), transparent 58%),
+        radial-gradient(900px 500px at 50% 110%, rgba(65,209,127,.10), transparent 58%),
+        var(--bg);
+      color: #e9f0ff;
+    }
+
+    /* ===== Header (match home.html) ===== */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11,18,32,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .topbar .inner{
+      max-width: 1180px; /* slightly wider to support bigger question panel */
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brandWrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 240px;
+      flex: 1 1 auto;
+    }
+    .logo{
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+    }
+    @media (min-width: 768px){
+      .logo{ width: 52px; height: 52px; }
+      .topbar .inner{ padding: 16px 16px; }
+    }
+    .brandDot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(71,178,255,.55);
+      display:inline-block;
+      transform: translateY(-1px);
+      margin-right: .55rem;
+    }
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      line-height: 1.2;
+      flex-wrap: wrap;
+    }
+    .hubTitle{
+      font-weight: 800;
+      font-size: 18px;
+      margin: 0;
+    }
+    @media (min-width: 768px){
+      .hubTitle{ font-size: 20px; }
+    }
+    .hubSub{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .rightWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      flex: 0 0 auto;
+    }
+    .navLinks{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      white-space: nowrap;
+    }
+    .navLinks a{
+      color: rgba(233,240,255,.92);
+      text-decoration: none;
+      font-size: 13px;
+      opacity: .92;
+    }
+    .navLinks a:hover{ text-decoration: underline; }
+
+    .pills{
+      display:flex;
+      gap:8px;
+      flex-wrap: wrap;
+    }
+    .pill{
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+    }
+
+    /* Page wrap spacing */
+    .wrap{
+      max-width: 1180px; /* wider overall */
+      margin: 0 auto;
+      padding: 14px 16px 24px;
+    }
+    @media (min-width: 768px){
+      .wrap{ padding-top: 18px; }
+    }
+
+    /* ✅ MAKE QUESTION CARD BIGGER THAN RESULT CARD (tablet/desktop) */
+    @media (min-width: 980px){
+      .grid{ grid-template-columns: 1.55fr .95fr; } /* left bigger */
+    }
+
+    /* ✅ Make the LEFT card breathe more */
+    .qCard{
+      padding-bottom: 6px;
+    }
+
+    /* ✅ BIGGER IMAGE AREA + IMAGE */
+    .stage{
+      /* ensure stage uses more vertical space when available */
+      min-height: 58vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* the figure wrapper */
+    #frame{
+      margin: 0;
+    }
+
+    /* the question image */
+    #img{
+      width: 100%;
+      height: auto;
+      max-height: 72vh;      /* bigger image */
+      object-fit: contain;   /* keep full image visible */
+      border-radius: 14px;
+    }
+
+    /* make caption a bit larger (optional but helps) */
+    #caption{
+      font-size: 14px;
+      color: rgba(233,240,255,.75);
+      margin-top: 8px;
+    }
+
+    @media (min-width: 768px){
+      #img{ max-height: 76vh; }
+      #caption{ font-size: 15px; }
+    }
+
+    @media (hover:none){
+      .btn{ min-height: 46px; }
+    }
+
+    .zoomHint{
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Reflection viewer (uses same card styling) */
+    .reflectWrap{
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    .reflectImg{
+      width: 100%;
+      height: auto;
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      background: #0b1020;
+      cursor: zoom-in;
+      display:block;
+      box-shadow: 0 14px 32px rgba(0,0,0,.35);
+    }
+    .reflectNav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+      justify-content: space-between;
+    }
+    .hidden{ display:none !important; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ Header now matches home.html style -->
+  <header class="topbar">
+    <div class="inner">
+      <div class="brandWrap">
+        <img class="logo" src="/static/assets/logo.png" alt="Logo" />
+        <div>
+          <div class="titleRow">
+            <span class="brandDot"></span>
+            <h1 class="hubTitle">Maddie GenAI Games</h1>
+          </div>
+          <div class="hubSub">Prompt Guessing!</div>
+        </div>
+      </div>
+
+      <div class="rightWrap">
+        <div class="pills">
+          <div class="pill" id="pillProgress">0 / 0</div>
+          <div class="pill" id="pillScore">Score: —</div>
+        </div>
+
+        <nav class="navLinks" aria-label="Page navigation">
+          <a href="/games/phrase-completion">← Info</a>
+          <a href="/">Home</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- GAME VIEW -->
+  <main id="gameView" class="wrap grid">
+    <!-- ✅ add qCard class only for styling; does not affect JS -->
+    <section class="card qCard">
+      <div class="status" id="microStatus">Loading…</div>
+
+      <div class="stage">
+        <div id="skeleton" class="skeleton">
+          <div class="skBox"></div>
+          <div class="skLine"></div>
+        </div>
+
+        <figure id="frame" class="frame hidden">
+          <img id="img" alt="Prompt" />
+          <figcaption id="caption"></figcaption>
+        </figure>
+      </div>
+
+      <div class="actions">
+        <button class="btn" data-choice="child"><span class="k">1</span>Child</button>
+        <button class="btn" data-choice="teacher"><span class="k">2</span>Teacher</button>
+        <button class="btn" data-choice="ai"><span class="k">3</span>AI</button>
+        <button class="btn primary" id="nextBtn" disabled><span class="k">⏎</span>Next</button>
+      </div>
+
+      <div id="endcard" class="endcard hidden">
+        <div class="endTitle">Done ✅</div>
+        <div id="endStats" class="endStats"></div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+          <button class="btn" id="restartBtn">Play again</button>
+          <button class="btn primary" id="toReflectBtn" type="button">Continue to reflections →</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card">
+      <div class="sideTitle">Result</div>
+
+      <div class="badges">
+        <span class="badge" id="badgeResult">—</span>
+        <span class="badge" id="badgeTruth">Correct: —</span>
+      </div>
+
+      <div class="field">
+        <div class="label">Your choice</div>
+        <div class="box" id="yourChoice">—</div>
+      </div>
+
+      <div class="field">
+        <div class="label">Explanation image</div>
+        <img id="explainImg" class="explainImg hidden" alt="Explanation" />
+        <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
+        <div class="hint" id="notes">—</div>
+      </div>
+
+      <div class="field">
+        <div class="label">Response time</div>
+        <div class="box" id="rtMs">—</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- REFLECTION VIEW (3 pages) -->
+  <main id="reflectView" class="wrap hidden">
+    <div class="reflectWrap">
+      <div class="card">
+        <div class="sideTitle">Reflection</div>
+        <div class="status" id="reflectStatus">Page 1 of 3</div>
+
+        <img id="reflectImg" class="reflectImg" alt="Reflection page" />
+
+        <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
+
+        <div class="reflectNav">
+          <button class="btn" id="reflectPrevBtn" type="button">← Previous</button>
+          <button class="btn primary" id="reflectNextBtn" type="button">Next →</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <a class="btn secondary" href="/">Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">…</div>
+
+  <script src="/static/js/phrase_completion.js"></script>
+</body>
+</html>

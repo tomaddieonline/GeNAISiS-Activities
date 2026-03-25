@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image Sequence • Info</title>
+
+  <!-- Keep your existing game styling -->
+  <link rel="stylesheet" href="/static/css/image_sequence.css" />
+
+  <!-- Bootstrap header (same as home.html) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <style>
+    /* ✅ Dark background like the other pages */
+    :root{
+      --bg:#0b1220;
+      --hubTopBg: rgba(11,18,32,.72);
+      --hubStroke: rgba(255,255,255,.14);
+      --brand: #47b2ff;
+      --muted: rgba(233,240,255,.72);
+    }
+
+    body{
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 700px at 18% -12%, rgba(71,178,255,.26), transparent 62%),
+        radial-gradient(1100px 700px at 92% -6%, rgba(132,71,255,.16), transparent 58%),
+        radial-gradient(900px 500px at 50% 110%, rgba(65,209,127,.10), transparent 58%),
+        var(--bg);
+    }
+
+    /* Header styling (matches home) */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--hubTopBg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+
+    .brand-dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(71,178,255,.55);
+      display:inline-block;
+      margin-right:.55rem;
+      transform: translateY(-1px);
+    }
+
+    .logo{
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+    }
+    @media (min-width: 768px){
+      .logo{ width: 52px; height: 52px; }
+    }
+
+    .text-muted-2{ color: var(--muted) !important; }
+
+    /* ✅ Same change as Image Sequence • Play:
+       Make the content card blend into the background */
+    .card{
+      background: transparent !important;
+      box-shadow: none !important;
+      border: 1px solid rgba(255,255,255,.12) !important; /* subtle outline */
+    }
+
+    /* Optional: make the hero image feel premium */
+    .hero{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+  </style>
+</head>
+
+<body class="text-light">
+
+  <!-- Header copied from home.html style -->
+  <header class="topbar border-bottom border-secondary border-opacity-25">
+    <div class="container py-3 py-md-4">
+      <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <div class="d-flex align-items-center gap-3">
+          <img
+            src="/static/assets/logo.png"
+            alt="Logo"
+            class="logo rounded-4 border border-secondary border-opacity-25"
+          />
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="brand-dot"></span>
+              <h1 class="h5 mb-0 fw-bold">Maddie GenAI Games</h1>
+            </div>
+            <div class="text-muted-2 small">Bias Busters, Hallucination Hunters!</div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <a href="/" class="btn btn-outline-light btn-sm">Home</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page content -->
+  <main class="wrap">
+    <div class="card">
+      <img class="hero" src="/static/images/image_sequence/intro.png" alt="Game description" />
+      <div class="body text-light">
+        <h1>How it works</h1>
+        <ul>
+          <li>Click <b>Next</b> and <b>Previous</b> to navigate the sequence.</li>
+          <li>Click/tap the image to open a full-screen zoom overlay.</li>
+          <li>Optional captions/notes can be shown under each image.</li>
+        </ul>
+
+        <a class="btn primary text-bg-dark" href="/games/image-sequence/play">Start</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bootstrap JS (optional; safe to include) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!-- app/templates/home.html (Bootstrap, tablet-friendly, professional — same functionality/links) -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Maddie GenAISIS Activities</title>
+
+  <!-- Bootstrap 5 (CDN) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --muted: rgba(233,240,255,.72);
+      --brand: #47b2ff;
+      --brand2: rgba(132,71,255,.16);
+    }
+    body{
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 700px at 18% -12%, rgba(71,178,255,.26), transparent 62%),
+        radial-gradient(1100px 700px at 92% -6%, var(--brand2), transparent 58%),
+        radial-gradient(900px 500px at 50% 110%, rgba(65,209,127,.10), transparent 58%),
+        var(--bg);
+    }
+
+    @media (min-width: 768px){
+      body{ font-size: 1.02rem; }
+    }
+
+    .glass{
+      background: var(--panel);
+      border: 1px solid var(--stroke);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 16px 44px rgba(0,0,0,.35);
+    }
+
+    .brand-dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(71,178,255,.55);
+      display:inline-block;
+      margin-right:.55rem;
+      transform: translateY(-1px);
+    }
+
+    .text-muted-2{ color: var(--muted) !important; }
+
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11,18,32,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .logo{
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+    }
+    @media (min-width: 768px){
+      .logo{ width: 52px; height: 52px; }
+    }
+
+    .badge-soft{
+      background: rgba(71,178,255,.14);
+      border: 1px solid rgba(71,178,255,.30);
+      color: rgba(233,240,255,.94);
+    }
+
+    /* Card polish */
+    .game-card{
+      transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+      border-color: rgba(255,255,255,.14) !important;
+      overflow: hidden;
+    }
+    .game-card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(71,178,255,.42) !important;
+      box-shadow: 0 22px 56px rgba(0,0,0,.45);
+    }
+    .game-card:active{
+      transform: translateY(-1px);
+    }
+
+    @media (min-width: 768px){
+      .game-card .card-body{ padding: 1.25rem; }
+      .game-card .card-footer{ padding: .9rem 1.25rem; }
+    }
+
+    .card-footer{
+      background: rgba(0,0,0,.10) !important;
+      border-top-color: rgba(255,255,255,.10) !important;
+    }
+
+    .hero-title{ letter-spacing: -0.02em; }
+
+    @media (min-width: 768px){
+      .cards-row > [class*="col-"]{ display:flex; }
+      .cards-row .card{ width:100%; }
+    }
+
+    .footer-note{ color: rgba(233,240,255,.55); }
+
+    /* ✅ image inside each card, smaller than the card */
+    .game-thumb-wrap{
+      margin-top: .75rem;
+      padding: .65rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .game-thumb{
+      width: 100%;
+      height: auto;
+      max-height: 150px;
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.15);
+    }
+    @media (min-width: 768px){
+      .game-thumb{ max-height: 170px; }
+    }
+
+    /* ✅ NEW: Partner logos row */
+    .partners{
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .partner-label{
+      color: rgba(233,240,255,.72);
+      font-size: .95rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+    .partner-grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
+    @media (min-width: 768px){
+      .partner-grid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    .partner-tile{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding: 10px 12px;
+      min-height: 72px;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .partner-tile:hover{
+      transform: translateY(-1px);
+      border-color: rgba(71,178,255,.30);
+    }
+    .partner-logo{
+      max-width: 100%;
+      max-height: 46px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: none;
+    }
+  </style>
+</head>
+
+<body class="text-light">
+
+  <!-- Top bar -->
+  <header class="topbar border-bottom border-secondary border-opacity-25">
+    <div class="container py-3 py-md-4">
+      <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+        <div class="d-flex align-items-center gap-3">
+          <img
+            src="/static/assets/logo.png"
+            alt="Logo"
+            class="logo rounded-4 border border-secondary border-opacity-25"
+          />
+          <div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="brand-dot"></span>
+              <h1 class="h5 h4-md mb-0 fw-bold">Maddie GENAISIS ACTIVITIES</h1>
+            </div>
+            <div class="text-muted-2 small">
+              Pick an activity. Learn how humans and AI differ.
+            </div>
+          </div>
+        </div>
+
+        <!-- reserved -->
+        <div class="d-flex align-items-center gap-2"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-4 py-md-5">
+    <!-- Hero -->
+    <div class="row g-3 g-md-4 align-items-stretch">
+      <div class="col-12 col-lg-7">
+        <div class="glass rounded-4 p-4 p-md-5 h-100">
+          <h2 class="hero-title h4 h3-md fw-bold mb-2">Welcome 👋</h2>
+          <p class="text-muted-2 mb-3 mb-md-4">
+            This App brings together three short activities designed to explore perception,
+            creativity, and how we recognise patterns across <b>children</b>, <b>professional artists</b>,
+            and <b>AI</b>.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-5">
+        <div class="glass rounded-4 p-4 p-md-5 h-100">
+          <h3 class="h6 fw-bold mb-2">How it works</h3>
+          <ol class="text-muted-2 mb-0 ps-3">
+            <li class="mb-2">Choose an activty below.</li>
+            <li class="mb-2">Work through a short sequence.</li>
+            <li class="mb-2">Get instant feedback and explanations (where available).</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game cards -->
+    <section class="mt-4 mt-md-5">
+      <div class="d-flex align-items-end justify-content-between flex-wrap gap-2">
+        <div>
+          <h3 class="h5 fw-bold mb-1">Choose an activity</h3>
+        </div>
+      </div>
+
+      <div class="row g-3 g-md-4 mt-1 cards-row">
+
+        <!-- Game 1: Image Sequence -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <a href="/games/image-sequence" class="text-decoration-none text-light w-100">
+            <div class="card bg-dark border-secondary border-opacity-25 shadow-sm rounded-4 h-100 game-card">
+              <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between gap-3">
+                  <span class="badge rounded-pill badge-soft">Live</span>
+                </div>
+
+                <h4 class="h6 fw-bold mt-3 mb-2">Image Sequence</h4>
+
+                <div class="game-thumb-wrap">
+                  <img
+                    class="game-thumb"
+                    src="/static/assets/game_cards/image_sequence.png"
+                    alt="Image Sequence preview"
+                  />
+                </div>
+
+                <p class="text-muted-2 small mt-3 mb-0">
+                  Browse a curated sequence with <b>Previous</b>/<b>Next</b>. Tap any image to zoom
+                  full-screen for closer inspection.
+                </p>
+              </div>
+
+              <div class="card-footer border-secondary border-opacity-25 rounded-bottom-4">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="small text-muted-2">Start game</span>
+                  <span class="small">→</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Game 2: Phrase Completion -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <a href="/games/phrase-completion" class="text-decoration-none text-light w-100">
+            <div class="card bg-dark border-secondary border-opacity-25 shadow-sm rounded-4 h-100 game-card">
+              <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between gap-3">
+                  <span class="badge rounded-pill badge-soft">Live</span>
+                </div>
+
+                <h4 class="h6 fw-bold mt-3 mb-2">Phrase Completion</h4>
+
+                <div class="game-thumb-wrap">
+                  <img
+                    class="game-thumb"
+                    src="/static/assets/game_cards/phrase_completion.png"
+                    alt="Phrase Completion preview"
+                  />
+                </div>
+
+                <p class="text-muted-2 small mt-3 mb-0">
+                  You’ll see a completed phrase and guess whether the completion came from
+                  <b>AI</b>, a <b>child</b>, or a <b>teacher</b>.
+                </p>
+              </div>
+
+              <div class="card-footer border-secondary border-opacity-25 rounded-bottom-4">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="small text-muted-2">Start game</span>
+                  <span class="small">→</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Game 3: Bot or Not -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <a href="/games/bot-or-not" class="text-decoration-none text-light w-100">
+            <div class="card bg-dark border-secondary border-opacity-25 shadow-sm rounded-4 h-100 game-card">
+              <div class="card-body">
+                <div class="d-flex align-items-start justify-content-between gap-3">
+                  <span class="badge rounded-pill badge-soft">Live</span>
+                </div>
+
+                <h4 class="h6 fw-bold mt-3 mb-2">Bot or Not</h4>
+
+                <div class="game-thumb-wrap">
+                  <img
+                    class="game-thumb"
+                    src="/static/assets/game_cards/bot_or_not.png"
+                    alt="Bot or Not preview"
+                  />
+                </div>
+
+                <p class="text-muted-2 small mt-3 mb-0">
+                  You’ll see images in sequence and decide whether each one was made by a
+                  <b>child</b>, a <b>professional artist</b>, or an <b>AI</b>.
+                </p>
+              </div>
+
+              <div class="card-footer border-secondary border-opacity-25 rounded-bottom-4">
+                <div class="d-flex align-items-center justify-content-between">
+                  <span class="small text-muted-2">Start game</span>
+                  <span class="small">→</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ✅ NEW: Partners row (4 icons) -->
+    <section class="partners">
+      <div class="partner-label"></div>
+
+      <div class="partner-grid">
+        <!-- Replace these src paths with your real partner logo files -->
+        <div class="partner-tile">
+          <img class="partner-logo" src="/static/assets/partners/partner1.png" alt="Partner 1 logo" />
+        </div>
+        <div class="partner-tile">
+          <img class="partner-logo" src="/static/assets/partners/partner2.png" alt="Partner 2 logo" />
+        </div>
+        <div class="partner-tile">
+          <img class="partner-logo" src="/static/assets/partners/partner3.png" alt="Partner 3 logo" />
+        </div>
+        <div class="partner-tile">
+          <img class="partner-logo" src="/static/assets/partners/partner4.png" alt="Partner 4 logo" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-3 pt-3 border-top border-secondary border-opacity-25 footer-note small">
+      <div class="d-flex justify-content-between flex-wrap gap-2">
+        <span>© Maddie GENAISIS Activities</span>
+      </div>
+    </footer>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html>

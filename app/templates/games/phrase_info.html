@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prompt Guessing!</title>
+
+  <link rel="stylesheet" href="/static/css/phrase_completion.css" />
+
+  <!-- ✅ Header + background styled to match home.html (Bootstrap hub look) -->
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --muted: rgba(233,240,255,.72);
+      --brand: #47b2ff;
+      --brand2: rgba(132,71,255,.16);
+    }
+
+    body{
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(1200px 700px at 18% -12%, rgba(71,178,255,.26), transparent 62%),
+        radial-gradient(1100px 700px at 92% -6%, var(--brand2), transparent 58%),
+        radial-gradient(900px 500px at 50% 110%, rgba(65,209,127,.10), transparent 58%),
+        var(--bg);
+      color: #e9f0ff;
+    }
+
+    /* ===== Header (match home.html) ===== */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11,18,32,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .topbar .inner{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brandWrap{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 220px;
+      flex: 1 1 auto;
+    }
+    .logo{
+      width: 46px;
+      height: 46px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+    }
+    @media (min-width: 768px){
+      .logo{ width: 52px; height: 52px; }
+      .topbar .inner{ padding: 16px 16px; }
+    }
+    .brandDot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--brand);
+      box-shadow: 0 0 18px rgba(71,178,255,.55);
+      display:inline-block;
+      transform: translateY(-1px);
+      margin-right: .55rem;
+    }
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      line-height: 1.2;
+    }
+    .hubTitle{
+      font-weight: 800;
+      font-size: 18px;
+      margin: 0;
+    }
+    @media (min-width: 768px){
+      .hubTitle{ font-size: 20px; }
+    }
+    .hubSub{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+    .navLinks{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .navLinks a{
+      color: rgba(233,240,255,.92);
+      text-decoration: none;
+      font-size: 13px;
+      opacity: .92;
+    }
+    .navLinks a:hover{ text-decoration: underline; }
+
+    /* ===== Page layout ===== */
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 16px 24px;
+    }
+    @media (min-width: 768px){
+      .wrap{ padding-top: 18px; }
+    }
+
+    .card{
+      max-width: 980px;
+      margin: 0 auto;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.25);
+    }
+
+    /* Intro images (tap to zoom) */
+    .hero{
+      width: 100%;
+      height: auto;
+      max-height: 68vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid var(--stroke);
+      background: #0b1020;
+      cursor: zoom-in;
+      box-shadow: 0 14px 32px rgba(0,0,0,.35);
+      display:block;
+    }
+
+    .zoomHint{
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .introActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    /* Fullscreen overlay */
+    .imgOverlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.86);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      z-index: 9999;
+    }
+    .imgOverlay img{
+      width: 100%;
+      max-width: 1400px;
+      max-height: 94vh;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: #0b1020;
+      cursor: zoom-out;
+    }
+
+    .hidden{ display:none !important; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ Header now matches home.html style -->
+  <header class="topbar">
+    <div class="inner">
+      <div class="brandWrap">
+        <img class="logo" src="/static/assets/logo.png" alt="Logo" />
+        <div>
+          <div class="titleRow">
+            <span class="brandDot"></span>
+            <h1 class="hubTitle">Maddie GenAI Games</h1>
+          </div>
+          <div class="hubSub">Prompt Guessing • Can you tell who completed the sentence?</div>
+        </div>
+      </div>
+
+      <nav class="navLinks" aria-label="Page navigation">
+        <a href="/">← Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="card">
+
+      <!-- INTRO PAGE 1 -->
+      <section id="intro1">
+        <img
+          id="introImg1"
+          class="hero"
+          src="/static/images/phrase_completion/intro_1.png"
+          alt="Intro page 1"
+        />
+        <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
+
+        <div class="body">
+          <h1>Before you start</h1>
+          <ul>
+            <li>Each prompt is shown as an image.</li>
+            <li>Decide who completed it: <b>AI</b>, <b>Child</b>, or <b>Teacher</b>.</li>
+          </ul>
+
+          <div class="introActions">
+            <button type="button" class="btn primary" id="introNextBtn">Next →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTRO PAGE 2 -->
+      <section id="intro2" class="hidden">
+        <img
+          id="introImg2"
+          class="hero"
+          src="/static/images/phrase_completion/intro_2.png"
+          alt="Intro page 2"
+        />
+        <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
+
+        <div class="body">
+          <h1>How feedback works</h1>
+          <ul>
+            <li>After you answer, the correct source is revealed.</li>
+            <li>You’ll see an explanation image (tap to zoom).</li>
+            <li>Press <b>Next</b> to continue.</li>
+          </ul>
+
+          <div class="introActions">
+            <button type="button" class="btn secondary" id="introBackBtn">← Back</button>
+            <a class="btn primary" id="startGameBtn" href="/games/phrase-completion/play">Start Game</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="/static/js/phrase_info.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+**/__pycache__
+**/*.py[cod]
+.env
+.env.*
+.local-data
+backups
+.pytest_cache
+**/responses.jsonl
+tests
+docs
+scripts

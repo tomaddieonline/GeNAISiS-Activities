@@ -1,0 +1,108 @@
+name: Test and publish container
+
+on:
+  pull_request:
+    branches: [main, migration-to-new-site]
+  push:
+    branches: [main, migration-to-new-site]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: container-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.14'
+          cache: pip
+      - name: Install and check dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip check
+      - name: Test the application
+        run: python -B -m unittest discover -s tests -v
+      - name: Check browser JavaScript syntax
+        run: |
+          for script in app/static/js/*.js; do
+            node --check "$script"
+          done
+      - name: Validate Compose configurations
+        run: |
+          docker compose -f compose.yaml config --quiet
+          docker compose -f portainer-stack.yaml config --quiet
+      - name: Build the test image
+        run: docker build --pull --tag genaisis-activities:test .
+      - name: Check container health and response persistence
+        run: python scripts/check_container.py genaisis-activities:test
+
+  publish:
+    needs: verify
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/migration-to-new-site')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set the registry image name and branch tag
+        id: image
+        run: |
+          echo "name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF_NAME" == "main" ]]; then
+            echo 'channel=latest' >> "$GITHUB_OUTPUT"
+          else
+            echo 'channel=migration-to-new-site' >> "$GITHUB_OUTPUT"
+          fi
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        with:
+          platforms: arm64
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish Linux images
+        id: publish
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ steps.image.outputs.name }}:${{ steps.image.outputs.channel }}
+            ${{ steps.image.outputs.name }}:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Record the deployable image
+        env:
+          IMAGE_NAME: ${{ steps.image.outputs.name }}
+          IMAGE_DIGEST: ${{ steps.publish.outputs.digest }}
+        run: |
+          {
+            echo 'Published container image:'
+            echo
+            echo "\`$IMAGE_NAME:sha-$GITHUB_SHA\`"
+            echo
+            echo 'Exact image digest:'
+            echo
+            echo "\`$IMAGE_NAME@$IMAGE_DIGEST\`"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -18,6 +18,21 @@ def docker(*args):
                           text=True, timeout=120).stdout.strip()
 
 
+def wait_for_http(base, timeout=60):
+    deadline = time.monotonic() + timeout
+    last_error = None
+    while time.monotonic() < deadline:
+        try:
+            with urlopen(base + "/", timeout=2) as response:
+                if response.status == 200:
+                    return
+        # Docker may expose the port before Gunicorn can answer HTTP requests.
+        except (URLError, ConnectionError, TimeoutError) as exc:
+            last_error = exc
+        time.sleep(1)
+    raise RuntimeError(f"Container did not become ready within {timeout} seconds") from last_error
+
+
 def main(image):
     name = f"genaisis-smoke-{uuid4().hex[:12]}"
     volume = f"{name}-responses"
@@ -31,16 +46,8 @@ def main(image):
                    "--cap-drop", "ALL", "--security-opt", "no-new-privileges:true", image)
             port = docker("port", name, "8000/tcp").split(":")[-1]
             base = f"http://127.0.0.1:{port}"
-            deadline = time.monotonic() + 60
-            while time.monotonic() < deadline:
-                try:
-                    with urlopen(base + "/", timeout=2) as response:
-                        if response.status == 200:
-                            return base
-                except (URLError, TimeoutError):
-                    pass
-                time.sleep(1)
-            raise RuntimeError("Container did not become ready within 60 seconds")
+            wait_for_http(base)
+            return base
 
         base = start()
         assert docker("exec", name, "id", "-u") == "10001", "Container must run as UID 10001"

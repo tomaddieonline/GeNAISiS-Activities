@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     environment:
       URL_PREFIX: "${URL_PREFIX:-/genaisis}"
+      PUBLIC_ORIGIN: "${PUBLIC_ORIGIN:-}"
+      GOOGLE_SITE_VERIFICATION: "${GOOGLE_SITE_VERIFICATION:-}"
     ports:
       - "127.0.0.1:${APP_PORT:-8083}:8000"
     volumes:

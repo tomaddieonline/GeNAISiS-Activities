@@ -112,6 +112,14 @@ The script verifies page links/assets, non-root writes, health, and response
 persistence after replacing the container. Docker is unavailable on the local
 Windows review machine, so container execution is verified on GitHub.
 
+### Google Search Console
+
+For page metadata, the sitemap and Google verification, follow the
+[Search Console setup guide](docs/search-console.md). The production stack sets
+`PUBLIC_ORIGIN=https://pantheon.greek-geek.info`; the app combines it with
+`URL_PREFIX` for canonical links and `/genaisis/sitemap.xml`. Local development
+omits canonical links and the sitemap until a public origin is configured.
+
 ### Updates and backups
 
 For an update, copy the reviewed source changes and run `docker compose up -d

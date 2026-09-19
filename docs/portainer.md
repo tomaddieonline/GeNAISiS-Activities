@@ -101,6 +101,8 @@ review of networking, scheduling, and storage.
 | `APP_PORT` | `8083` | The host port selected for this deployment. |
 | `BIND_ADDRESS` | `127.0.0.1` | Bind to the host loopback interface by default. |
 | `URL_PREFIX` | `/genaisis` | Mount all pages, assets and APIs under this path. Set `/` for a root deployment. |
+| `PUBLIC_ORIGIN` | `https://pantheon.greek-geek.info` | Public scheme and hostname for canonical URLs and the sitemap; no path. |
+| `GOOGLE_SITE_VERIFICATION` | Empty | Optional content value of Google's HTML verification tag. |
 
 For this deployment, nginx runs on `192.168.1.22` and its upstream is
 `http://127.0.0.1:8083`. The public site will be
@@ -128,6 +130,9 @@ source checkout.
 Source: [Portainer stack creation](https://docs.portainer.io/user/docker/stacks/add).
 
 ## 4. Verify, update, and roll back
+
+For Google ownership verification, sitemap submission and the shared host's
+robots.txt, follow [the Search Console guide](search-console.md).
 
 After deployment, confirm the container becomes **healthy**, inspect its logs,
 and walk through all three activities. In the container console, response files

@@ -1,5 +1,29 @@
-from flask import render_template
+from xml.etree import ElementTree
+
+from flask import Response, abort, current_app, render_template, request
+from app.seo import PAGE_METADATA, public_url
 from . import main_bp
+
+
+@main_bp.context_processor
+def page_metadata():
+    metadata = PAGE_METADATA.get(request.endpoint)
+    return {
+        "page_meta": metadata,
+        "canonical_url": public_url(request.endpoint) if metadata else None,
+    }
+
+
+@main_bp.get("/sitemap.xml")
+def sitemap():
+    if not current_app.config["PUBLIC_ORIGIN"]:
+        abort(404)
+    root = ElementTree.Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
+    for endpoint in PAGE_METADATA:
+        node = ElementTree.SubElement(root, "url")
+        ElementTree.SubElement(node, "loc").text = public_url(endpoint)
+    return Response(ElementTree.tostring(root, encoding="utf-8", xml_declaration=True),
+                    mimetype="application/xml")
 
 @main_bp.get("/")
 def home():

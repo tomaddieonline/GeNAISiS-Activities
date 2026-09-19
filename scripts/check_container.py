@@ -13,6 +13,7 @@ from urllib.error import URLError
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 from uuid import uuid4
+from xml.etree import ElementTree
 
 
 class PageLinks(HTMLParser):
@@ -52,6 +53,7 @@ def wait_for_http(base, timeout=60):
 
 def main(image, url_prefix=""):
     url_prefix = url_prefix.rstrip("/")
+    public_origin = "https://pantheon.greek-geek.info"
     name = f"genaisis-smoke-{uuid4().hex[:12]}"
     volume = f"{name}-responses"
     docker("volume", "create", volume)
@@ -60,6 +62,7 @@ def main(image, url_prefix=""):
             docker("run", "--detach", "--name", name,
                    "--publish", "127.0.0.1::8000",
                    "--env", f"URL_PREFIX={url_prefix}",
+                   "--env", f"PUBLIC_ORIGIN={public_origin}",
                    "--mount", f"type=volume,src={volume},dst=/var/lib/genaisis",
                    "--read-only", "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m",
                    "--cap-drop", "ALL", "--security-opt", "no-new-privileges:true", image)
@@ -89,6 +92,18 @@ def main(image, url_prefix=""):
         for url in sorted(page_urls):
             assert url.startswith(url_prefix + "/"), f"URL escapes the mount path: {url}"
             with urlopen(urljoin(base + "/", url), timeout=5) as response:
+                assert response.status == 200, url
+
+        with urlopen(base + "/sitemap.xml", timeout=5) as response:
+            assert response.headers.get_content_type() == "application/xml"
+            sitemap = ElementTree.fromstring(response.read())
+        sitemap_urls = [node.text for node in sitemap.findall(
+            "{http://www.sitemaps.org/schemas/sitemap/0.9}url/"
+            "{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+        assert len(sitemap_urls) == 6, sitemap_urls
+        for url in sitemap_urls:
+            assert url.startswith(public_origin + url_prefix + "/"), url
+            with urlopen(base + url.removeprefix(public_origin + url_prefix), timeout=5) as response:
                 assert response.status == 200, url
 
         records = {}

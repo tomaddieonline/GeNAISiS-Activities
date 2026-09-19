@@ -1,0 +1,8 @@
+<title>{{ page_meta.title }}</title>
+<meta name="description" content="{{ page_meta.description }}" />
+{% if canonical_url %}
+<link rel="canonical" href="{{ canonical_url }}" />
+{% endif %}
+{% if request.endpoint == 'main.home' and config.GOOGLE_SITE_VERIFICATION %}
+<meta name="google-site-verification" content="{{ config.GOOGLE_SITE_VERIFICATION }}" />
+{% endif %}

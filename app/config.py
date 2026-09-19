@@ -7,6 +7,8 @@ RESPONSES_DIR = os.environ.get("RESPONSES_DIR", DATA_DIR)
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
     URL_PREFIX = os.environ.get("URL_PREFIX", "")
+    PUBLIC_ORIGIN = os.environ.get("PUBLIC_ORIGIN", "")
+    GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "")
 
     BOT_OR_NOT_IMAGES_JSON = os.path.join(DATA_DIR, "bot_or_not", "images.json")
     BOT_OR_NOT_RESPONSES_JSONL = os.path.join(RESPONSES_DIR, "bot_or_not", "responses.jsonl")

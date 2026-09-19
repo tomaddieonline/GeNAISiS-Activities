@@ -4,12 +4,14 @@ from flask import Flask
 from werkzeug.exceptions import NotFound
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from app.config import Config
+from app.seo import configure_public_origin
 
 def create_app(config=None):
     app = Flask(__name__)
     app.config.from_object(Config)
     if config is not None:
         app.config.update(config)
+    configure_public_origin(app)
 
     from app.blueprints.main.routes import main_bp
     app.register_blueprint(main_bp)

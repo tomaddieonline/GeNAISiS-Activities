@@ -1,3 +1,5 @@
+const APP_ROOT = document.documentElement.dataset.appRoot || "";
+
 let sessionId = null;
 let images = [];
 let index = 0;
@@ -87,7 +89,7 @@ const introductionSlides = [
   {
     image:
       el.introImg?.dataset.imageOne ||
-      "/static/images/bot_or_not/intro-image-1.png",
+      `${APP_ROOT}/static/images/bot_or_not/intro-image-1.png`,
 
     heading:
       "Welcome to The Great Art Guess Off",
@@ -101,7 +103,7 @@ const introductionSlides = [
   {
     image:
       el.introImg?.dataset.imageTwo ||
-      "/static/images/bot_or_not/intro-image-2.png",
+      `${APP_ROOT}/static/images/bot_or_not/intro-image-2.png`,
 
     heading:
       "Child, Professional Artist, or AI?",
@@ -761,7 +763,7 @@ async function showCurrent() {
   const item = images[index];
 
   const src =
-    `/static/images/bot_or_not/${encodeURIComponent(
+    `${APP_ROOT}/static/images/bot_or_not/${encodeURIComponent(
       item.filename
     )}`;
 
@@ -834,7 +836,7 @@ async function showCurrent() {
 
   if (nextItem) {
     const nextSrc =
-      `/static/images/bot_or_not/${encodeURIComponent(
+      `${APP_ROOT}/static/images/bot_or_not/${encodeURIComponent(
         nextItem.filename
       )}`;
 
@@ -930,7 +932,7 @@ async function revealAndSave(rawChoice) {
   if (el.explainImg) {
     if (item.explain_image) {
       const explanationSrc =
-        `/static/images/bot_or_not/${encodeURIComponent(
+        `${APP_ROOT}/static/images/bot_or_not/${encodeURIComponent(
           item.explain_image
         )}`;
 
@@ -974,7 +976,7 @@ async function revealAndSave(rawChoice) {
 
   try {
     const response = await fetch(
-      "/api/bot-or-not/submit",
+      `${APP_ROOT}/api/bot-or-not/submit`,
       {
         method: "POST",
 
@@ -1132,7 +1134,7 @@ async function renderReflection() {
   }
 
   const src =
-    `/static/images/bot_or_not/${encodeURIComponent(
+    `${APP_ROOT}/static/images/bot_or_not/${encodeURIComponent(
       slide.file
     )}`;
 
@@ -1179,7 +1181,7 @@ async function nextReflection() {
 
     await renderReflection();
   } else {
-    window.location.href = "/";
+    window.location.href = `${APP_ROOT}/`;
   }
 }
 
@@ -1388,7 +1390,7 @@ async function loadGameData() {
   try {
     const session =
       await fetchJSON(
-        "/api/bot-or-not/session"
+        `${APP_ROOT}/api/bot-or-not/session`
       );
 
     sessionId =
@@ -1401,7 +1403,7 @@ async function loadGameData() {
 
     images =
       await fetchJSON(
-        "/api/bot-or-not/images"
+        `${APP_ROOT}/api/bot-or-not/images`
       );
 
     if (
@@ -1435,7 +1437,7 @@ async function loadGameData() {
 
     if (images[0]) {
       const firstImageSrc =
-        `/static/images/bot_or_not/${encodeURIComponent(
+        `${APP_ROOT}/static/images/bot_or_not/${encodeURIComponent(
           images[0].filename
         )}`;
 

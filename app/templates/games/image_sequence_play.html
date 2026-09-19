@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="{{ request.script_root }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Image Sequence • Play</title>
 
   <!-- Your existing game styling -->
-  <link rel="stylesheet" href="/static/css/image_sequence.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/image_sequence.css') }}" />
 
   <!-- Bootstrap header (same as home.html) -->
   <link
@@ -84,7 +84,7 @@
       <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
         <div class="d-flex align-items-center gap-3">
           <img
-            src="/static/assets/logo.png"
+            src="{{ url_for('static', filename='assets/logo.png') }}"
             alt="Logo"
             class="logo rounded-4 border border-secondary border-opacity-25"
           />
@@ -98,8 +98,8 @@
         </div>
 
         <div class="d-flex align-items-center gap-2 flex-wrap">
-          <a href="/games/image-sequence" class="btn btn-outline-light btn-sm">← Info</a>
-          <a href="/" class="btn btn-outline-light btn-sm">Home</a>
+          <a href="{{ url_for('main.image_sequence_info') }}" class="btn btn-outline-light btn-sm">← Info</a>
+          <a href="{{ url_for('main.home') }}" class="btn btn-outline-light btn-sm">Home</a>
           <span class="badge rounded-pill text-bg-secondary" id="pillProgress">0 / 0</span>
           <!-- <span class="badge rounded-pill text-bg-dark border border-secondary border-opacity-25" id="microSession">Session: —</span> -->
         </div>
@@ -140,6 +140,6 @@
     crossorigin="anonymous"
   ></script>
 
-  <script src="/static/js/image_sequence.js"></script>
+  <script src="{{ url_for('static', filename='js/image_sequence.js') }}"></script>
 </body>
 </html>

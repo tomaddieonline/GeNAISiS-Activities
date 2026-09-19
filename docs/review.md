@@ -142,6 +142,15 @@ temporary-file access. Test responses were isolated from the existing records.
 
 ## Before deployment
 
+The selected target is now `https://pantheon.greek-geek.info/genaisis/`, with
+nginx on `192.168.1.22` forwarding to `127.0.0.1:8083`. The stack sets
+`URL_PREFIX=/genaisis`; the app mounts its pages, assets and APIs under that path,
+and generated/browser URLs retain it. The nginx snippet is saved in
+`docs/nginx-genaisis.conf` for later installation. Root deployment remains
+supported. Twelve Python tests and six JavaScript URL tests cover both modes;
+the workflow also checks the real container in both modes before publishing.
+The server's nginx configuration has not been changed by this work.
+
 Continue reviewing and resolving the open application findings on
 `migration-to-new-site`, and confirm its Actions build succeeds before trial
 deployment. Merge to `main` only after the migration is validated. The chosen deployment

@@ -3,8 +3,10 @@ services:
     build: .
     image: genaisis-activities:local
     restart: unless-stopped
+    environment:
+      URL_PREFIX: "${URL_PREFIX:-/genaisis}"
     ports:
-      - "127.0.0.1:${APP_PORT:-8080}:8000"
+      - "127.0.0.1:${APP_PORT:-8083}:8000"
     volumes:
       - responses:/var/lib/genaisis
     read_only: true

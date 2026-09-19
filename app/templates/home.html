@@ -1,6 +1,6 @@
 <!-- app/templates/home.html (Bootstrap, tablet-friendly, professional — same functionality/links) -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="{{ request.script_root }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -191,7 +191,7 @@
       <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
         <div class="d-flex align-items-center gap-3">
           <img
-            src="/static/assets/logo.png"
+            src="{{ url_for('static', filename='assets/logo.png') }}"
             alt="Logo"
             class="logo rounded-4 border border-secondary border-opacity-25"
           />
@@ -250,7 +250,7 @@
 
         <!-- Game 1: Image Sequence -->
         <div class="col-12 col-md-6 col-lg-4">
-          <a href="/games/image-sequence" class="text-decoration-none text-light w-100">
+          <a href="{{ url_for('main.image_sequence_info') }}" class="text-decoration-none text-light w-100">
             <div class="card bg-dark border-secondary border-opacity-25 shadow-sm rounded-4 h-100 game-card">
               <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between gap-3">
@@ -262,7 +262,7 @@
                 <div class="game-thumb-wrap">
                   <img
                     class="game-thumb"
-                    src="/static/assets/game_cards/image_sequence.png"
+                    src="{{ url_for('static', filename='assets/game_cards/image_sequence.png') }}"
                     alt="Image Sequence preview"
                   />
                 </div>
@@ -285,7 +285,7 @@
 
         <!-- Game 2: Phrase Completion -->
         <div class="col-12 col-md-6 col-lg-4">
-          <a href="/games/phrase-completion" class="text-decoration-none text-light w-100">
+          <a href="{{ url_for('main.phrase_info') }}" class="text-decoration-none text-light w-100">
             <div class="card bg-dark border-secondary border-opacity-25 shadow-sm rounded-4 h-100 game-card">
               <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between gap-3">
@@ -297,7 +297,7 @@
                 <div class="game-thumb-wrap">
                   <img
                     class="game-thumb"
-                    src="/static/assets/game_cards/phrase_completion.png"
+                    src="{{ url_for('static', filename='assets/game_cards/phrase_completion.png') }}"
                     alt="Phrase Completion preview"
                   />
                 </div>
@@ -320,7 +320,7 @@
 
         <!-- Game 3: Bot or Not -->
         <div class="col-12 col-md-6 col-lg-4">
-          <a href="/games/bot-or-not" class="text-decoration-none text-light w-100">
+          <a href="{{ url_for('main.bot_or_not_page') }}" class="text-decoration-none text-light w-100">
             <div class="card bg-dark border-secondary border-opacity-25 shadow-sm rounded-4 h-100 game-card">
               <div class="card-body">
                 <div class="d-flex align-items-start justify-content-between gap-3">
@@ -332,7 +332,7 @@
                 <div class="game-thumb-wrap">
                   <img
                     class="game-thumb"
-                    src="/static/assets/game_cards/bot_or_not.png"
+                    src="{{ url_for('static', filename='assets/game_cards/bot_or_not.png') }}"
                     alt="Bot or Not preview"
                   />
                 </div>
@@ -363,16 +363,16 @@
       <div class="partner-grid">
         <!-- Replace these src paths with your real partner logo files -->
         <div class="partner-tile">
-          <img class="partner-logo" src="/static/assets/partners/partner1.png" alt="Partner 1 logo" />
+          <img class="partner-logo" src="{{ url_for('static', filename='assets/partners/partner1.png') }}" alt="Partner 1 logo" />
         </div>
         <div class="partner-tile">
-          <img class="partner-logo" src="/static/assets/partners/partner2.png" alt="Partner 2 logo" />
+          <img class="partner-logo" src="{{ url_for('static', filename='assets/partners/partner2.png') }}" alt="Partner 2 logo" />
         </div>
         <div class="partner-tile">
-          <img class="partner-logo" src="/static/assets/partners/partner3.png" alt="Partner 3 logo" />
+          <img class="partner-logo" src="{{ url_for('static', filename='assets/partners/partner3.png') }}" alt="Partner 3 logo" />
         </div>
         <div class="partner-tile">
-          <img class="partner-logo" src="/static/assets/partners/partner4.png" alt="Partner 4 logo" />
+          <img class="partner-logo" src="{{ url_for('static', filename='assets/partners/partner4.png') }}" alt="Partner 4 logo" />
         </div>
       </div>
     </section>

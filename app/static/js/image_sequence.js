@@ -1,3 +1,5 @@
+const APP_ROOT = document.documentElement.dataset.appRoot || "";
+
 let sessionId = null;
 let items = [];
 let index = 0;
@@ -78,7 +80,7 @@ async function logAction(action){
   if (!item) return;
 
   try{
-    await fetch("/api/image-sequence/submit", {
+    await fetch(`${APP_ROOT}/api/image-sequence/submit`, {
       method: "POST",
       headers: { "Content-Type":"application/json" },
       body: JSON.stringify({
@@ -104,7 +106,7 @@ async function showCurrent(){
     return;
   }
 
-  const src = `/static/images/image_sequence/${encodeURIComponent(item.filename)}`;
+  const src = `${APP_ROOT}/static/images/image_sequence/${encodeURIComponent(item.filename)}`;
 
   if (el.prevBtn) el.prevBtn.disabled = (index <= 0);
   if (el.nextBtn) el.nextBtn.disabled = (index >= items.length - 1);
@@ -144,7 +146,7 @@ async function showCurrent(){
   // preload next
   const next = items[index + 1];
   if (next){
-    preload(`/static/images/image_sequence/${encodeURIComponent(next.filename)}`).catch(()=>{});
+    preload(`${APP_ROOT}/static/images/image_sequence/${encodeURIComponent(next.filename)}`).catch(()=>{});
   }
 
   showSkeleton(false);
@@ -181,14 +183,14 @@ async function start(){
   setStatus("Starting…");
 
   try{
-    const s = await fetchJSON("/api/image-sequence/session");
+    const s = await fetchJSON(`${APP_ROOT}/api/image-sequence/session`);
     sessionId = s.session_id;
 
     if (el.microSession){
       el.microSession.textContent = `Session: ${sessionId.slice(0,8)}…`;
     }
 
-    items = await fetchJSON("/api/image-sequence/items");
+    items = await fetchJSON(`${APP_ROOT}/api/image-sequence/items`);
     if (!Array.isArray(items) || items.length === 0){
       showSkeleton(false);
       setStatus("No images configured in data/image_sequence/items.json");

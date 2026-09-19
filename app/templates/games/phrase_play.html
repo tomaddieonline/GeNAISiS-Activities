@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="{{ request.script_root }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Phrase Completion • Play</title>
 
-  <link rel="stylesheet" href="/static/css/phrase_completion.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/phrase_completion.css') }}" />
 
   <!-- ✅ Match home.html header + background (no functionality changes) -->
   <style>
@@ -231,7 +231,7 @@
   <header class="topbar">
     <div class="inner">
       <div class="brandWrap">
-        <img class="logo" src="/static/assets/logo.png" alt="Logo" />
+        <img class="logo" src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" />
         <div>
           <div class="titleRow">
             <span class="brandDot"></span>
@@ -248,8 +248,8 @@
         </div>
 
         <nav class="navLinks" aria-label="Page navigation">
-          <a href="/games/phrase-completion">← Info</a>
-          <a href="/">Home</a>
+          <a href="{{ url_for('main.phrase_info') }}">← Info</a>
+          <a href="{{ url_for('main.home') }}">Home</a>
         </nav>
       </div>
     </div>
@@ -335,7 +335,7 @@
         </div>
 
         <div style="margin-top:12px;">
-          <a class="btn secondary" href="/">Home</a>
+          <a class="btn secondary" href="{{ url_for('main.home') }}">Home</a>
         </div>
       </div>
     </div>
@@ -343,6 +343,6 @@
 
   <div id="toast" class="toast">…</div>
 
-  <script src="/static/js/phrase_completion.js"></script>
+  <script src="{{ url_for('static', filename='js/phrase_completion.js') }}"></script>
 </body>
 </html>

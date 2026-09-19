@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="{{ request.script_root }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Image Sequence • Info</title>
 
   <!-- Keep your existing game styling -->
-  <link rel="stylesheet" href="/static/css/image_sequence.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/image_sequence.css') }}" />
 
   <!-- Bootstrap header (same as home.html) -->
   <link
@@ -91,7 +91,7 @@
       <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
         <div class="d-flex align-items-center gap-3">
           <img
-            src="/static/assets/logo.png"
+            src="{{ url_for('static', filename='assets/logo.png') }}"
             alt="Logo"
             class="logo rounded-4 border border-secondary border-opacity-25"
           />
@@ -105,7 +105,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-2">
-          <a href="/" class="btn btn-outline-light btn-sm">Home</a>
+          <a href="{{ url_for('main.home') }}" class="btn btn-outline-light btn-sm">Home</a>
         </div>
       </div>
     </div>
@@ -114,7 +114,7 @@
   <!-- Page content -->
   <main class="wrap">
     <div class="card">
-      <img class="hero" src="/static/images/image_sequence/intro.png" alt="Game description" />
+      <img class="hero" src="{{ url_for('static', filename='images/image_sequence/intro.png') }}" alt="Game description" />
       <div class="body text-light">
         <h1>How it works</h1>
         <ul>
@@ -123,7 +123,7 @@
           <li>Optional captions/notes can be shown under each image.</li>
         </ul>
 
-        <a class="btn primary text-bg-dark" href="/games/image-sequence/play">Start</a>
+        <a class="btn primary text-bg-dark" href="{{ url_for('main.image_sequence_play') }}">Start</a>
       </div>
     </div>
   </main>

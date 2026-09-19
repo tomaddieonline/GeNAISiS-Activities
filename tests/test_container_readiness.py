@@ -28,6 +28,8 @@ class ContainerReadinessTests(unittest.TestCase):
             RemoteDisconnected("Remote end closed connection without response"),
             HTTPError("http://127.0.0.1:8000/", 503, "Starting", {}, None),
         ):
+            if isinstance(error, HTTPError):
+                self.addCleanup(error.close)
             with self.subTest(error=type(error).__name__):
                 response = MagicMock()
                 response.__enter__.return_value.status = 200

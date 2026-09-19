@@ -9,7 +9,7 @@ Changes pushed to migration-to-new-site
   -> You deploy/update the stack in Portainer
 ```
 
-The local preparation itself did not run GitHub Actions or publish an image.
+The GitHub workflow publishes the image; Portainer deployment remains manual.
 Review the open findings in [review.md](review.md) before launching publicly.
 
 ## 1. Publish the first image
@@ -29,9 +29,10 @@ for that UI to appear). Until then, pushes to the migration branch trigger its
 builds automatically. Pull requests run verification without publishing.
 
 The workflow installs the pinned dependencies, runs smoke tests and JavaScript
-syntax checks, validates both Compose files, and builds a Linux AMD64 test image.
+syntax/URL tests, validates both Compose files, and builds a Linux AMD64 test image.
 It checks page/API responses, the non-root user, response-volume writes and
-persistence after container replacement, and the Docker health check. Only after
+persistence after container replacement, and the Docker health check at both
+the root and `/genaisis`. Only after
 these pass does it build/publish the AMD64 and ARM64 image variants. ARM64 is
 built through QEMU; its application runtime is not separately smoke-tested.
 
@@ -89,7 +90,7 @@ This stack targets **Docker Standalone**. A Swarm deployment requires a separate
 review of networking, scheduling, and storage.
 
 1. Select the Linux Docker environment in Portainer.
-2. Choose **Stacks -> Add stack** and name it `genaisis-activities`.
+2. Choose **Stacks -> Add stack** and name it `genaisis-activities-migration`.
 3. Paste [portainer-stack.yaml](../portainer-stack.yaml) into the web editor.
 4. Select the GHCR registry if Portainer requests a registry selection.
 5. Set stack environment variables as needed, then deploy the stack.
@@ -97,19 +98,28 @@ review of networking, scheduling, and storage.
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `IMAGE_TAG` | `migration-to-new-site` | Set `sha-<full commit hash>` to choose a reviewed build. Use `latest` only after the later merge to `main`. |
-| `APP_PORT` | `8080` | Use a free host port. |
+| `APP_PORT` | `8083` | The host port selected for this deployment. |
 | `BIND_ADDRESS` | `127.0.0.1` | Bind to the host loopback interface by default. |
+| `URL_PREFIX` | `/genaisis` | Mount all pages, assets and APIs under this path. Set `/` for a root deployment. |
 
-The default is suitable for a reverse proxy running on the same Linux host. That
-proxy forwards the website hostname to `http://127.0.0.1:8080` and terminates HTTPS.
-For LAN-only review without a host proxy, set `BIND_ADDRESS` to the server's LAN
-IP and visit that IP/port from your computer. With the default loopback bind,
-the service cannot be reached directly using the server's LAN/public IP.
+For this deployment, nginx runs on `192.168.1.22` and its upstream is
+`http://127.0.0.1:8083`. The public site will be
+`https://pantheon.greek-geek.info/genaisis/`. The loopback binding makes the
+container reachable by nginx on that host; it is not a direct LAN listening port.
 
-If the reverse proxy runs in Docker, connect `web` to its existing proxy network
-and use a unique service network alias as the upstream on port 8000. In that
-arrangement the published host port can be removed. The exact proxy/network
-configuration depends on the server and is not assumed by the supplied stack.
+When ready to configure nginx, add the locations in
+[nginx-genaisis.conf](nginx-genaisis.conf) to the existing HTTPS server block for
+`pantheon.greek-geek.info`. The `proxy_pass http://127.0.0.1:8083;` directive has
+no trailing slash: nginx must preserve `/genaisis` because the application is
+mounted there. The exact `/genaisis` URL redirects to `/genaisis/`. A prefix
+header or response-body rewriting is not needed.
+
+Test the nginx configuration with `sudo nginx -t` before reloading it. The
+snippet is prepared in the repository; the server's nginx configuration has
+not been changed. The Docker health check works before nginx is configured.
+
+Sources: [nginx proxy_pass](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass),
+[Werkzeug application mounting](https://werkzeug.palletsprojects.com/en/stable/middleware/dispatcher/).
 
 There is no `build:` directive in this stack: Portainer downloads the image built
 by GitHub. Do not paste `compose.yaml` instead; that file is for building from a

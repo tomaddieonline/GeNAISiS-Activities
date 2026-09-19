@@ -1,9 +1,15 @@
+import re
+
 from flask import Flask
+from werkzeug.exceptions import NotFound
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from app.config import Config
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
     app.config.from_object(Config)
+    if config is not None:
+        app.config.update(config)
 
     from app.blueprints.main.routes import main_bp
     app.register_blueprint(main_bp)
@@ -18,5 +24,11 @@ def create_app():
     from app.blueprints.image_sequence.api import image_seq_api_bp
     app.register_blueprint(image_seq_api_bp)
 
+
+    prefix = app.config["URL_PREFIX"].rstrip("/")
+    if prefix:
+        if not re.fullmatch(r"(?:/[A-Za-z0-9_-]+)+", prefix):
+            raise ValueError("URL_PREFIX must be a path such as /genaisis")
+        app.wsgi_app = DispatcherMiddleware(NotFound(), {prefix: app.wsgi_app})
 
     return app

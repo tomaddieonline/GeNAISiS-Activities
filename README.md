@@ -30,6 +30,7 @@ Run the smoke tests:
 ```powershell
 .\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
 .\.venv\Scripts\python.exe -m pip check
+node --test tests/test_browser_paths.cjs
 ```
 
 Tests use temporary response files and do not alter the existing records. They
@@ -55,9 +56,9 @@ migration tag. `main` is preserved for a later merge; once the workflow reaches
 `main`, builds there publish `latest`. The commands below are an alternative for
 building directly from a Linux source checkout.
 
-The Docker and Compose files are prepared, but a Linux image build and container
-test are still pending. Resolve the open findings in [docs/review.md](docs/review.md)
-before public deployment. The target server needs Docker Engine and the Compose
+The workflow builds and tests the Linux container before publishing. Review the
+open findings in [docs/review.md](docs/review.md) before public deployment.
+The target server needs Docker Engine and the Compose
 plugin; Docker Desktop is not required on the Windows review machine.
 
 From a copy of this repository on the Linux server:
@@ -68,21 +69,26 @@ docker compose build --pull
 docker compose up -d
 docker compose ps
 docker compose logs --tail=100 web
-curl --fail http://127.0.0.1:8080/
+curl --fail http://127.0.0.1:8083/genaisis/
 ```
 
-The service binds to the server's loopback interface on port 8080. Select an
-unused port with `APP_PORT=8081 docker compose up -d`, or set `APP_PORT` in an
-untracked `.env` file. An existing reverse proxy on the host should forward the
-chosen website hostname to `http://127.0.0.1:8080` and provide HTTPS. A reverse
-proxy running in another container needs a shared Docker network and upstream
-`web:8000` instead; confirm the server's layout before changing its proxy.
+The deployment target is `https://pantheon.greek-geek.info/genaisis/`. Both stack
+files default to `URL_PREFIX=/genaisis` and publish `127.0.0.1:8083` on the Docker
+host. nginx runs on `192.168.1.22` and connects to that loopback port. The
+[nginx location snippet](docs/nginx-genaisis.conf) preserves `/genaisis` in the
+upstream request; it is intended for the existing HTTPS virtual host and has
+not been installed on the server.
+
+The app generates page links, static paths, JavaScript requests and health checks
+for the configured prefix. Set `URL_PREFIX=/` to serve a container at the root;
+without the variable, local Flask development still serves at the root. To use
+a different host port, set `APP_PORT` and adjust nginx's upstream accordingly.
 
 For private review from your computer, open an SSH tunnel and then browse to
-<http://127.0.0.1:8080> locally:
+<http://127.0.0.1:8083/genaisis/> locally:
 
 ```sh
-ssh -N -L 8080:127.0.0.1:8080 user@server
+ssh -N -L 8083:127.0.0.1:8083 user@192.168.1.22
 ```
 
 The image runs Gunicorn as UID/GID 10001 with one synchronous worker. This
@@ -101,10 +107,10 @@ starts with an empty response store; existing records are not automatically
 imported. See [Docker volume documentation](https://docs.docker.com/engine/storage/volumes/).
 
 GitHub Actions runs `scripts/check_container.py` against an isolated test image
-and disposable volume before publishing. The script verifies non-root writes,
-health, and response persistence after replacing the container. These checks
-still need their first run on GitHub; Docker is unavailable on the local Windows
-review machine.
+and disposable volume both at the root and under `/genaisis` before publishing.
+The script verifies page links/assets, non-root writes, health, and response
+persistence after replacing the container. Docker is unavailable on the local
+Windows review machine, so container execution is verified on GitHub.
 
 ### Updates and backups
 

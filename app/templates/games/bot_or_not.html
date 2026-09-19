@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="{{ request.script_root }}">
 <head>
   <meta charset="utf-8" />
 
@@ -108,7 +108,7 @@
         </div>
 
         <a
-          href="/"
+          href="{{ url_for('main.home') }}"
           class="backlink"
           style="flex:0 0 auto;"
         >
@@ -524,7 +524,7 @@
 
             <a
               class="btn secondary"
-              href="/"
+              href="{{ url_for('main.home') }}"
               id="reflectHomeBtn"
             >
               Home

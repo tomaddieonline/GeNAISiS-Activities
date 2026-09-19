@@ -37,6 +37,8 @@ jobs:
           for script in app/static/js/*.js; do
             node --check "$script"
           done
+      - name: Check game requests under root and mounted paths
+        run: node --test tests/test_browser_paths.cjs
       - name: Validate Compose configurations
         run: |
           docker compose -f compose.yaml config --quiet
@@ -44,7 +46,9 @@ jobs:
       - name: Build the test image
         run: docker build --pull --tag genaisis-activities:test .
       - name: Check container health and response persistence
-        run: python scripts/check_container.py genaisis-activities:test
+        run: |
+          python scripts/check_container.py genaisis-activities:test
+          python scripts/check_container.py genaisis-activities:test /genaisis
 
   publish:
     needs: verify

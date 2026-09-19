@@ -5,8 +5,10 @@ services:
   web:
     image: ghcr.io/tomaddieonline/genaisis-activities:${IMAGE_TAG:-migration-to-new-site}
     restart: unless-stopped
+    environment:
+      URL_PREFIX: "${URL_PREFIX:-/genaisis}"
     ports:
-      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8080}:8000"
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-8083}:8000"
     volumes:
       - responses:/var/lib/genaisis
     read_only: true

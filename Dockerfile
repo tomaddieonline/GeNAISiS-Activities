@@ -23,7 +23,7 @@ USER 10001:10001
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/', timeout=3).close()"]
+    CMD ["python", "-c", "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:8000' + os.environ.get('URL_PREFIX', '').rstrip('/') + '/', timeout=3).close()"]
 
 # One synchronous worker serializes writes to the current JSONL storage.
 # Revisit storage locking or a database before increasing workers/threads/replicas.

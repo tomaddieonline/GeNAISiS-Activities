@@ -1,16 +1,33 @@
 """Smoke-test a built image using a disposable Docker container and named volume.
 
-Usage: python scripts/check_container.py genaisis-activities:test
+Usage: python scripts/check_container.py genaisis-activities:test [/genaisis]
 Requires a Linux Docker engine. Does not touch the deployed application's data.
 """
 
 import json
+from html.parser import HTMLParser
 import subprocess
 import sys
 import time
 from urllib.error import URLError
+from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 from uuid import uuid4
+
+
+class PageLinks(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.urls = set()
+        self.app_root = None
+
+    def handle_starttag(self, tag, attrs):
+        for name, value in attrs:
+            if tag == "html" and name == "data-app-root":
+                self.app_root = value
+            if name in ("href", "src", "data-image-one", "data-image-two"):
+                if value and value.startswith("/"):
+                    self.urls.add(value)
 
 
 def docker(*args):
@@ -33,7 +50,8 @@ def wait_for_http(base, timeout=60):
     raise RuntimeError(f"Container did not become ready within {timeout} seconds") from last_error
 
 
-def main(image):
+def main(image, url_prefix=""):
+    url_prefix = url_prefix.rstrip("/")
     name = f"genaisis-smoke-{uuid4().hex[:12]}"
     volume = f"{name}-responses"
     docker("volume", "create", volume)
@@ -41,11 +59,12 @@ def main(image):
         def start():
             docker("run", "--detach", "--name", name,
                    "--publish", "127.0.0.1::8000",
+                   "--env", f"URL_PREFIX={url_prefix}",
                    "--mount", f"type=volume,src={volume},dst=/var/lib/genaisis",
                    "--read-only", "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m",
                    "--cap-drop", "ALL", "--security-opt", "no-new-privileges:true", image)
             port = docker("port", name, "8000/tcp").split(":")[-1]
-            base = f"http://127.0.0.1:{port}"
+            base = f"http://127.0.0.1:{port}{url_prefix}"
             wait_for_http(base)
             return base
 
@@ -57,11 +76,20 @@ def main(image):
                "assert not list(Path('/app/data').rglob('responses.jsonl')); "
                "assert not list(Path('/var/lib/genaisis').rglob('responses.jsonl'))")
 
+        page_urls = set()
         for path in ("/", "/games/bot-or-not", "/games/phrase-completion",
                      "/games/phrase-completion/play", "/games/image-sequence",
                      "/games/image-sequence/play"):
             with urlopen(base + path, timeout=5) as response:
                 assert response.status == 200, path
+                links = PageLinks()
+                links.feed(response.read().decode("utf-8"))
+                assert links.app_root == url_prefix, (path, links.app_root)
+                page_urls.update(links.urls)
+        for url in sorted(page_urls):
+            assert url.startswith(url_prefix + "/"), f"URL escapes the mount path: {url}"
+            with urlopen(urljoin(base + "/", url), timeout=5) as response:
+                assert response.status == 200, url
 
         records = {}
         for prefix, endpoint, folder in (
@@ -115,4 +143,5 @@ def main(image):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "genaisis-activities:test")
+    main(sys.argv[1] if len(sys.argv) > 1 else "genaisis-activities:test",
+         sys.argv[2] if len(sys.argv) > 2 else "")

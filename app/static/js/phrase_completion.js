@@ -1,3 +1,5 @@
+const APP_ROOT = document.documentElement.dataset.appRoot || "";
+
 let sessionId = null;
 let items = [];
 let index = 0;
@@ -10,9 +12,9 @@ let awaitingNext = false;
 
 // ✅ Reflection sequence (3 pages)
 const reflections = [
-  "/static/images/phrase_completion/reflection_1.png",
-  "/static/images/phrase_completion/reflection_2.png",
-  "/static/images/phrase_completion/reflection_3.png",
+  `${APP_ROOT}/static/images/phrase_completion/reflection_1.png`,
+  `${APP_ROOT}/static/images/phrase_completion/reflection_2.png`,
+  `${APP_ROOT}/static/images/phrase_completion/reflection_3.png`,
 ];
 let reflectIndex = 0;
 
@@ -191,7 +193,7 @@ function goReflectNext(){
     showReflection();
   } else {
     // finished reflections
-    window.location.href = "/";
+    window.location.href = `${APP_ROOT}/`;
   }
 }
 
@@ -245,7 +247,7 @@ async function showCurrent(){
   if (el.nextBtn) el.nextBtn.disabled = true;
 
   const item = items[index];
-  const src = `/static/images/phrase_completion/${encodeURIComponent(item.prompt_image)}`;
+  const src = `${APP_ROOT}/static/images/phrase_completion/${encodeURIComponent(item.prompt_image)}`;
 
   resetRightPanel();
   lockChoices(true);
@@ -277,7 +279,7 @@ async function showCurrent(){
 
   const next = items[index+1];
   if (next){
-    preload(`/static/images/phrase_completion/${encodeURIComponent(next.prompt_image)}`).catch(()=>{});
+    preload(`${APP_ROOT}/static/images/phrase_completion/${encodeURIComponent(next.prompt_image)}`).catch(()=>{});
   }
 
   showSkeleton(false);
@@ -310,7 +312,7 @@ async function revealAndSave(choice){
   // explanation image (tap to zoom)
   if (el.explainImg){
     if (item.explain_image){
-      const exSrc = `/static/images/phrase_completion/${encodeURIComponent(item.explain_image)}`;
+      const exSrc = `${APP_ROOT}/static/images/phrase_completion/${encodeURIComponent(item.explain_image)}`;
       el.explainImg.src = exSrc;
       el.explainImg.classList.remove("hidden");
     } else {
@@ -328,7 +330,7 @@ async function revealAndSave(choice){
   }
 
   try{
-    const res = await fetch("/api/phrase/submit", {
+    const res = await fetch(`${APP_ROOT}/api/phrase/submit`, {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({
@@ -426,10 +428,10 @@ async function start(){
   setScorePill();
 
   try{
-    const s = await fetchJSON("/api/phrase/session");
+    const s = await fetchJSON(`${APP_ROOT}/api/phrase/session`);
     sessionId = s.session_id;
 
-    items = await fetchJSON("/api/phrase/items");
+    items = await fetchJSON(`${APP_ROOT}/api/phrase/items`);
 
     if (el.pillProgress) el.pillProgress.textContent = `0 / ${items.length}`;
     toast("Ready");

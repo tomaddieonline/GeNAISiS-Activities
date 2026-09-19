@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-app-root="{{ request.script_root }}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Prompt Guessing!</title>
 
-  <link rel="stylesheet" href="/static/css/phrase_completion.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/phrase_completion.css') }}" />
 
   <!-- ✅ Header + background styled to match home.html (Bootstrap hub look) -->
   <style>
@@ -189,7 +189,7 @@
   <header class="topbar">
     <div class="inner">
       <div class="brandWrap">
-        <img class="logo" src="/static/assets/logo.png" alt="Logo" />
+        <img class="logo" src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" />
         <div>
           <div class="titleRow">
             <span class="brandDot"></span>
@@ -200,7 +200,7 @@
       </div>
 
       <nav class="navLinks" aria-label="Page navigation">
-        <a href="/">← Home</a>
+        <a href="{{ url_for('main.home') }}">← Home</a>
       </nav>
     </div>
   </header>
@@ -213,7 +213,7 @@
         <img
           id="introImg1"
           class="hero"
-          src="/static/images/phrase_completion/intro_1.png"
+          src="{{ url_for('static', filename='images/phrase_completion/intro_1.png') }}"
           alt="Intro page 1"
         />
         <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
@@ -236,7 +236,7 @@
         <img
           id="introImg2"
           class="hero"
-          src="/static/images/phrase_completion/intro_2.png"
+          src="{{ url_for('static', filename='images/phrase_completion/intro_2.png') }}"
           alt="Intro page 2"
         />
         <div class="zoomHint">Tip: tap the image to zoom full-screen.</div>
@@ -251,7 +251,7 @@
 
           <div class="introActions">
             <button type="button" class="btn secondary" id="introBackBtn">← Back</button>
-            <a class="btn primary" id="startGameBtn" href="/games/phrase-completion/play">Start Game</a>
+            <a class="btn primary" id="startGameBtn" href="{{ url_for('main.phrase_play') }}">Start Game</a>
           </div>
         </div>
       </section>
@@ -259,6 +259,6 @@
     </div>
   </main>
 
-  <script src="/static/js/phrase_info.js"></script>
+  <script src="{{ url_for('static', filename='js/phrase_info.js') }}"></script>
 </body>
 </html>
